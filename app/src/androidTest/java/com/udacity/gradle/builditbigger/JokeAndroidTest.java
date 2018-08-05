@@ -11,7 +11,7 @@ public class JokeAndroidTest extends LoaderTestCase {
     @Test
     public void testJokeResponse() {
         String result = null;
-        EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask(getContext());
+        EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask(getContext(), null);
         endpointsAsyncTask.execute();
         try {
             result = endpointsAsyncTask.get();

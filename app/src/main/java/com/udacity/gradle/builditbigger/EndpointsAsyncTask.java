@@ -4,13 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -24,25 +21,17 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
     private MyApi myApiService = null;
     private Context context;
     ProgressBar progressBar;
-    private InterstitialAd mInterstitialAd;
 
 
     public EndpointsAsyncTask(Context context, ProgressBar progressBar) {
         this.context = context;
         this.progressBar = progressBar;
-        MobileAds.initialize(context, "ca-app-pub-2480573010797624~8787005914");
-        mInterstitialAd = new InterstitialAd(context);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-
     }
 
     @Override
     protected void onPreExecute() {
-        progressBar.setVisibility(View.VISIBLE);
+        if(progressBar != null)
+            progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -74,13 +63,8 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
 
     @Override
     protected void onPostExecute(String joke) {
-        progressBar.setVisibility(View.GONE);
-        //keep having the message D/TAG: The interstitial wasn't loaded yet.
-       if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
-        }
+        if(progressBar != null)
+            progressBar.setVisibility(View.GONE);
         Intent intent = new Intent(context, DisplayJokeActivity.class);
         intent.putExtra(DisplayJokeActivity.JOKE_INTENT, joke);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
